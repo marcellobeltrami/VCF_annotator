@@ -102,7 +102,7 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
     print(chrom_checked,"done!")
 
 # Example usage
-vcf_file = "/home/marcello/Thesis_dev/VCF_analyzer/scripts/test.vcf"
+vcf_file = "./test.vcf"
 sample_group_res = ["BT594", "MBT357", "MBT373"]
 sample_group_sens = ["BT972", "BT241", "BT935", "MBT168"]
 
