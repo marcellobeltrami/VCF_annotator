@@ -1,6 +1,6 @@
 from vcf import Reader, Writer
 
-
+#DELETE FILE AFTER TESTING
 
 vcf_file = Reader(open("./scripts/test.vcf", 'r'))
 sample_group_res = ["BT594", "MBT357", "MBT373"]

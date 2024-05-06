@@ -1,16 +1,16 @@
-import requests
+from requests import Session
 import time
-import base64
+from base64 import b64encode
 
 
 # Function that logs usr in.
 def login(username, password):
     
     # Encode the credentials in base64
-    credentials = base64.b64encode(f"{username}:{password}".encode()).decode('utf-8')
+    credentials = b64encode(f"{username}:{password}".encode()).decode('utf-8')
 
     # Create a session
-    session = requests.Session()
+    session = Session()
 
     # Make a GET request to the login endpoint with the Authorization header
     response = session.get('https://run.opencravat.org/server/login', headers={'Authorization': f'Basic {credentials}'})
