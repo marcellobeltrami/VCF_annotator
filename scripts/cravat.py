@@ -14,7 +14,7 @@ def login(username, password):
 
     # Make a GET request to the login endpoint with the Authorization header
     response = session.get('https://run.opencravat.org/server/login', headers={'Authorization': f'Basic {credentials}'})
-    
+ 
     # Check the response
     if response.status_code ==  200 and response.content==b'"success"':
         print("Login successful!")
@@ -23,6 +23,7 @@ def login(username, password):
     else:
         print("Login failed. Status code:", response.status_code)
         print("Response:", response.text)
+        
    
 #Reads settings from JSON file and returns them for OpenCravat.
 def oc_settings(json_file_path):

@@ -1,6 +1,6 @@
 from vcf import Reader, Writer
-
-
+import pandas as pd
+from math import isnan
 #Function that generates relevant chromosomes. Preset is for humans. 
 def chrom_gen(chromosome=25):
     chrom_list=[]
@@ -17,20 +17,23 @@ def chrom_gen(chromosome=25):
 
 
 #Function that filters out all scaffolds variant found in the VCF file. Function requires input and output
-def chr_filtering(vcf_location_path='all_samples_INDELS.vcf', output_location_path='all_samples_INDELS_filtered.vcf'):
+def chr_filtering(vcf_location_path, output_location_path):
     vcf_file = Reader(open(vcf_location_path, 'r'))
     vcf_writer = Writer(open(output_location_path, 'w'), vcf_file)
 
     chr_list = chrom_gen()
 
-
+    chrom_checked = "chr1"
+    print(chrom_checked, "being checked...")
+    # Filters out partial chromosome (suggested practice on GATK). 
     for record in vcf_file: 
-       
+       # Write the variant to the filtered VCF file
         if record.CHROM in chr_list:
-        # Write the variant to the filtered VCF file
-            print(record)
             vcf_writer.write_record(record)
         
+        # Tracker of chromosome being filtered. 
+        if record.CHROM != chrom_checked:
+            chrom_checked = record.CHROM 
     
     vcf_writer.close()
 
@@ -38,10 +41,15 @@ def chr_filtering(vcf_location_path='all_samples_INDELS.vcf', output_location_pa
     return output_location_path 
 
 
-def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNPs.vcf',sens_threshold=1, res_threshold=2, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
-    resistant_set = set(res)
-    sensitive_set = set(sens)
-
+def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold=1, res_threshold=2, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
+    
+    #Reads in samples data and removes nans from the respective list.
+    df = pd.read_csv(samples_csv, sep='\t')
+    sensitive_pd = df.iloc[:, 0].tolist()
+    sensitive_set = list(filter(lambda x: not isinstance(x, float), sensitive_pd))
+    resistant_pd = df.iloc[:, 1].tolist()
+    resistant_set = list(filter(lambda x: not isinstance(x, float), resistant_pd))
+   
     vcf_reader = Reader(filename=vcf_qual_filtered)
     differential_mutations = Writer(open(vcf_output, 'w'), vcf_reader)
     
@@ -49,8 +57,6 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
     print(chrom_checked, "being checked...")
     # For each record in file, accesses the sample INFO
     for record in vcf_reader:
-        
-
         if chrom_checked != record.CHROM:
                 print(chrom_checked, "done!")
                 print(record.CHROM,"being checked...")
@@ -72,7 +78,7 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
                     #Splits info and puts them in dictionary "record_dictionary" based on sample name
                     
                     #Checks for genotype quality.
-                    if genotype_qual >= GQ_thresh:
+                    if int(genotype_qual) >= GQ_thresh:
 
                         FREQ= str(record.genotype(sample_res).data.FREQ)
                         FREQ_fl = float(FREQ.replace("%", "")) 
@@ -111,12 +117,3 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
     print(chrom_checked,"done!")
 
     return vcf_output
-
-# Example usage
-vcf_file = "/home/marcello/Thesis_dev/VCF_annotator/scripts/test.vcf"
-sample_group_res = ["BT594", "MBT357", "MBT373"]
-sample_group_sens = ["BT972", "BT241", "BT935", "MBT168"]
-
-mutation_filter(vcf_file, sample_group_res, sample_group_sens)
-
-
