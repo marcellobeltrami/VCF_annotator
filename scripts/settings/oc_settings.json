@@ -1,0 +1,12 @@
+{
+    "options": {
+        "annotators": [
+            "clinvar"
+        ],
+        "reports": [
+            "text"
+        ],
+        "assembly": "hg38",
+        "note": "Default note"
+    }
+}

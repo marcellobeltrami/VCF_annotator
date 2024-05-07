@@ -1,7 +1,6 @@
 from vcf import Reader, Writer
 
 
-
 #Function that generates relevant chromosomes. Preset is for humans. 
 def chrom_gen(chromosome=25):
     chrom_list=[]
@@ -36,7 +35,7 @@ def chr_filtering(vcf_location_path='all_samples_INDELS.vcf', output_location_pa
     vcf_writer.close()
 
     print("Filtering done!")
-    return 0 
+    return output_location_path 
 
 
 def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNPs.vcf',sens_threshold=1, res_threshold=2, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
@@ -88,8 +87,6 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
                 except ValueError:
                     pass  
 
-                
-            
             #Checks sensitive genotypes for each sample and appends them to a list if they are heterozygous or homozygous mutations.  
             for sample_sens in sensitive_set: 
                 genotype_sens = str(record.genotype(sample_sens).data.GT)
@@ -101,7 +98,6 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
                 else: 
                     pass
         
-            
             #Determines differential mutations by using length of respective lists and saves record to a file.
 
             if len(res_GP) >= res_threshold and len(sens_GP) <= sens_threshold:
@@ -113,6 +109,8 @@ def mutation_filter(vcf_qual_filtered, res, sens, vcf_output='./differential_SNP
     res_GP = []
 
     print(chrom_checked,"done!")
+
+    return vcf_output
 
 # Example usage
 vcf_file = "/home/marcello/Thesis_dev/VCF_annotator/scripts/test.vcf"
