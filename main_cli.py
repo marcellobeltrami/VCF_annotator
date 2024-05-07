@@ -44,7 +44,6 @@ if __name__ == "__main__":
             psw_glob = cred["password"]
 
         ## 1)Filter VCF chromosomes
-        
         CHRM_vcf_filtered = fl.chr_filtering(vcf_location_path=input_file,output_location_path= f"/temps/{file_name}.VCF_filtered_chr.vcf")
         
         ## 2)Filter VCF diff mutations mutations based on samples.
