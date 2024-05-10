@@ -41,7 +41,7 @@ def chr_filtering(vcf_location_path, output_location_path):
     return output_location_path 
 
 
-def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold=1, res_threshold=2, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
+def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold, res_threshold, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
     
     #Reads in samples data and removes nans from the respective list.
     df = pd.read_csv(samples_csv, sep='\t')
@@ -90,6 +90,7 @@ def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold=1,
                                 res_GP.append(genotype_res)
                             else: 
                                 pass
+                #Exception is raised when mutations called is absent in all samples. Such record is then ignored.
                 except ValueError:
                     pass  
 

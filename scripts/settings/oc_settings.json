@@ -1,12 +1,15 @@
 {
     "options": {
         "annotators": [
-            "clinvar"
+            "clinvar",
+            "sift",
+            "polyphen2",
+            "dbsnp"
         ],
         "reports": [
             "text"
         ],
         "assembly": "hg38",
-        "note": "Default note"
+        "note": "VCF annotator job"
     }
 }
