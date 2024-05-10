@@ -38,7 +38,7 @@ if __name__ == "__main__":
     usr_glob=""
     psw_glob=""
     
-    
+    json_file_cred = "./scripts/settings/credentials.json"
     #Loads credetentials if they have been previously preserved.
     if  path.exists(json_file_cred) == True:
         cred = load(json_file_cred)
