@@ -1,7 +1,7 @@
 # WARNING: this scripts will delete all credentials, and results found in the VCF_annotator directory. BACKUP EVERYTHING YOU NEED.
 from os import listdir, remove, path
 
-print("Hold Your Horses: all credentials, data ,and results found in the VCF_annotator directory will be deleted")
+print("Hold Your Horses: all credentials, and results found in the VCF_annotator directory will be deleted")
 confirm = input("Are you sure you want to remove login info and results? [y/n]: ")
 json_file_cred = "./scripts/settings/credentials.json"
     
