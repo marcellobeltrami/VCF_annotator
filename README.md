@@ -1,4 +1,4 @@
-# :DNA VCF Annotator :DNA
+# 🧬 VCF Annotator 🧬
 
 VCF Annotator is a command-line tool designed to filter and annotate VCF files for human genomes. It filters chromosomes and mutations and then annotates the VCF file using OpenCravat.
 
