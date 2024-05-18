@@ -12,7 +12,7 @@ if confirm=="y" or confirm=="Y":
     results_to_rm = listdir("./results/")    
     for res in results_to_rm:
         remove(path.join("./results/",res))
-        print(" -->",res, "removed.")
+        print(" -->",f"../VCF_annotator/results/{res}" , "removed.")
         
 
     #Removes JSON credentials.
@@ -24,5 +24,5 @@ if confirm=="y" or confirm=="Y":
     
     print("Done! Good-bye :)")
 else: 
-    print("aborting deletion...")
+    print("aborting...")
     print("Your files are safe.")   

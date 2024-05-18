@@ -4,7 +4,6 @@ from os import listdir, remove, path, remove
 from pyfiglet import figlet_format
 from json import dump, load
 from argparse import ArgumentParser
-from sys import exit
 
 #<Starts  execution>
 if __name__ == "__main__":
@@ -20,8 +19,8 @@ if __name__ == "__main__":
     main_parser.add_argument('-o', '--output_file', required=True, help='Output file name. Insert an identifier for your file, this is NOT the output file path')
     main_parser.add_argument('-g', '--sample_groups', required=True, help='A TAB delimited file containing sample names found in VCF file. First column should be the normal, second one treatment')
     main_parser.add_argument('-temp','--temp_keep', type=str, default="n",help='Determines whether to keep intermediate files[y/n].')
-    main_parser.add_argument('-nm','--normal_mutation_threshold', type=int, default=1,help='Mutations with genotypes above this values and lower than treatment GT will be removed ')
-    main_parser.add_argument('-tm','--treatment_mutation_threshold', type=int, default=2,help='Mutations with genotypes above this values and lower than normal GT will be kept ')
+    main_parser.add_argument('-Num','--normal_mutations', nargs=2, type=int, default=[2,0],help='Mutations found in samples = or above  the first item and = or below the seconds item will be kept')
+    main_parser.add_argument('-Tum','--treatment_mutations', nargs=2, type=int, default=[0,2],help='Mutations found in samples = or below the first item and = or above the seconds item will be kept')
     
     
     # Parse arguments
@@ -30,8 +29,8 @@ if __name__ == "__main__":
     input_file=str(args_analysis.input_file)
     temp_keep = args_analysis.temp_keep
     output_file =str(args_analysis.output_file)
-    nml_thresh= int(args_analysis.normal_mutation_threshold)
-    trt_thresh = int(args_analysis.treatment_mutation_threshold)
+    nml_thresh = list(map(int, args_analysis.normal_mutations))
+    trt_thresh = list(map(int, args_analysis.treatment_mutations))
     
 
     #Functionality that allows to save credentials. 
@@ -41,9 +40,10 @@ if __name__ == "__main__":
     json_file_cred = "./scripts/settings/credentials.json"
     #Loads credetentials if they have been previously preserved.
     if  path.exists(json_file_cred) == True:
-        cred = load(json_file_cred)
-        usr_glob = cred["username"]
-        psw_glob = cred["password"]
+        with  open(json_file_cred, "r") as credentials:
+            cred = load(credentials)
+            usr_glob = cred["username"]
+            psw_glob = cred["password"]
 
     #Checks if credentials have been previously saved. 
     else:
@@ -69,19 +69,27 @@ if __name__ == "__main__":
     print("------------------------------------------------")
     print("Filtering mutations...")
     ## 2)Filter VCF diff mutations mutations based on samples genotypes.
+    
     MUT_vcf_filtered= fl.mutation_filter(vcf_qual_filtered=CHRM_vcf_filtered,
                                          samples_csv=samples_tab,
                                          FREQ_thresh=30,
-                                         res_threshold=trt_thresh,
-                                         sens_threshold=nml_thresh,
-                                         vcf_output=f"./temps/{output_file}.VCF_filtered_mut.vcf" )
+                                         Rtrt_threshold=trt_thresh[1],
+                                         Rnorm_threshold=trt_thresh[0],
+                                         Strt_threshold=nml_thresh[1],
+                                         Snorm_threshold=nml_thresh[0],
+                                         Rvcf_output=f"./temps/{output_file}.VCF_RES_filtered_mut.vcf",
+                                          Svcf_output=f"./temps/{output_file}.VCF_SENS_filtered_mut.vcf")
 
     ## 3)Add cravat annotation
     print("------------------------------------------------")
     print("Annotating vcf...")
-    oc.cravat_report(vcf_filtered_file_path=MUT_vcf_filtered, 
-                     annotated_file_name_path="./results/annotated_VCF.vcf", 
-                     username_oc=usr, password_oc=psw)
+
+    for key, value in MUT_vcf_filtered.items():
+        oc.cravat_report(vcf_filtered_file_path=value, 
+                        annotated_file_name_path=f"./results/annotated_{key}_{output_file}_VCF.vcf", 
+                        username_oc=usr_glob, password_oc=psw_glob)
+    
+    
 
     #Files are read in each function.      
     temp_dir="./temps"

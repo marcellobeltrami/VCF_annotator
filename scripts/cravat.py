@@ -66,7 +66,7 @@ def cravat_report(vcf_filtered_file_path, annotated_file_name_path, username_oc,
    
     while job_status.json()['status'] != "Finished": 
         print(job_status.json()['status'])
-        time.sleep(5)
+        time.sleep(30)
         time_elapsed += 30
         print(time_elapsed/60, "Minutes elapsed since job submission")
         

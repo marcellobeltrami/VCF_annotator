@@ -41,7 +41,7 @@ def chr_filtering(vcf_location_path, output_location_path):
     return output_location_path 
 
 
-def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold, res_threshold, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
+def mutation_filter(vcf_qual_filtered, samples_csv, Rvcf_output, Svcf_output, Rnorm_threshold, Rtrt_threshold, Snorm_threshold, Strt_threshold, FREQ_thresh=10, ADP_thres=10, GQ_thresh=30):
     
     #Reads in samples data and removes nans from the respective list.
     df = pd.read_csv(samples_csv, sep='\t')
@@ -51,7 +51,8 @@ def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold, r
     resistant_set = list(filter(lambda x: not isinstance(x, float), resistant_pd))
    
     vcf_reader = Reader(filename=vcf_qual_filtered)
-    differential_mutations = Writer(open(vcf_output, 'w'), vcf_reader)
+    diff_mutation_R = Writer(open(Rvcf_output, 'w'), vcf_reader)
+    diff_mutation_S = Writer(open(Svcf_output, 'w'), vcf_reader)
     
     chrom_checked = "chr1"
     print(chrom_checked, "being checked...")
@@ -64,7 +65,7 @@ def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold, r
 
         res_GP = []
         sens_GP = []
-    
+
         
         #Checks for errors in filter and threshold of ADP (Average per-sample depth based on Phred score). 
         if record.FILTER == [] and record.INFO.get('ADP') >= ADP_thres:
@@ -107,9 +108,13 @@ def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold, r
         
             #Determines differential mutations by using length of respective lists and saves record to a file.
 
-            if len(res_GP) >= res_threshold and len(sens_GP) <= sens_threshold:
+            if len(res_GP) >= Rtrt_threshold and len(sens_GP) <= Rnorm_threshold:
                 
-                differential_mutations.write_record(record)
+                diff_mutation_R.write_record(record)
+            
+            if len(res_GP) <= Strt_threshold and len(sens_GP) >= Snorm_threshold:
+                
+                diff_mutation_S.write_record(record)
 
     #Lists are emptied for each record to save memory.
     sens_GP = []
@@ -117,4 +122,5 @@ def mutation_filter(vcf_qual_filtered, samples_csv, vcf_output,sens_threshold, r
 
     print(chrom_checked,"done!")
 
-    return vcf_output
+    #returns both file paths to the filtered files
+    return {"TRT":Rvcf_output,"SENS":Svcf_output}
