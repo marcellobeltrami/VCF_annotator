@@ -41,7 +41,12 @@ python ./main_cli.py -i <input_file> -o <output_file> -g <sample_groups> [-temp 
 
 ```
 
+To remove Open Cravat credentials and results files located in VCF_annotator/results/ directory, use the following command:
 
+```sh
+python ./cleanup.py 
+
+```
 
 ## Detailed cli explanation
 
