@@ -43,7 +43,7 @@ def oc_settings(json_file_path):
     return formatted
 
 
-def cravat_report(vcf_filtered_file_path, annotated_file_name_path, username_oc, password_oc):
+def cravat_report(vcf_filtered_file_path, annotated_file_vcf,annotated_file_csv, username_oc, password_oc):
     
     #Initializes a session using usr login and password
     session = login(username_oc, password_oc)
@@ -66,14 +66,14 @@ def cravat_report(vcf_filtered_file_path, annotated_file_name_path, username_oc,
    
     while job_status.json()['status'] != "Finished": 
         print(job_status.json()['status'])
-        time.sleep(30)
-        time_elapsed += 30
+        time.sleep(10)
+        time_elapsed += 10
         print(time_elapsed/60, "Minutes elapsed since job submission")
         
         job_status = session.get('https://run.opencravat.org/submit/jobs/' + job_id + '/status')
 
 
-    #Checks whether annotation has finished.        
+    #Checks whether annotation has finished and outputs Annotated VCF.        
     if job_status.json()['status'] == "Finished":         
         report = session.post('https://run.opencravat.org/submit/jobs/' + job_id + '/reports/vcf')
 
@@ -85,10 +85,23 @@ def cravat_report(vcf_filtered_file_path, annotated_file_name_path, username_oc,
 
             request_report = session.get('https://run.opencravat.org/submit/jobs/' + job_id + '/reports/vcf')
             
-            with open(annotated_file_name_path, 'w') as file:
+            with open(annotated_file_vcf, 'w') as file:
                 file.write(request_report.text) 
-                      
-    
+
+    #Outputs annotations as CSV file                  
+    if job_status.json()['status'] == "Finished":         
+        report = session.post('https://run.opencravat.org/submit/jobs/' + job_id + '/reports/csv')
+
+        while report.json() != "done":
+             time.sleep(30)
+             report = session.post('https://run.opencravat.org/submit/jobs/' + job_id + '/reports/csv')
+
+        if report.json() == "done":
+
+            request_report = session.get('https://run.opencravat.org/submit/jobs/' + job_id + '/reports/csv')
+            
+            with open(annotated_file_csv, 'w') as file:
+                file.write(request_report.text) 
     return 0
 
 

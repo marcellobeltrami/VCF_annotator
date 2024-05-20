@@ -1,7 +1,7 @@
 import scripts.cravat as oc
 import scripts.filter as fl 
+import scripts.plotting as mplt
 from os import listdir, remove, path, remove
-from pyfiglet import figlet_format
 from json import dump, load
 from argparse import ArgumentParser
 
@@ -9,7 +9,13 @@ from argparse import ArgumentParser
 if __name__ == "__main__":
  
 
-    print(figlet_format("VCF annotator", font="standard"))
+    print("""
+ __     ______ _____                           _        _            
+ \ \   / / ___|  ___|   __ _ _ __  _ __   ___ | |_ __ _| |_ ___  _ __ 
+  \ \ / / |   | |_     / _` | '_ \| '_ \ / _ \| __/ _` | __/ _ \| '__|
+   \ V /| |___|  _|   | (_| | | | | | | | (_) | || (_| | || (_) | |   
+    \_/  \____|_|      \__,_|_| |_|_| |_|\___/ \__\__,_|\__\___/|_|   
+""")
     print("--------------------------------------------------------------------")
     #CLI interface
     main_parser = ArgumentParser(description='CLI interface for VCF annotator')
@@ -20,7 +26,7 @@ if __name__ == "__main__":
     main_parser.add_argument('-g', '--sample_groups', required=True, help='A TAB delimited file containing sample names found in VCF file. First column should be the normal, second one treatment')
     main_parser.add_argument('-temp','--temp_keep', type=str, default="n",help='Determines whether to keep intermediate files[y/n].')
     main_parser.add_argument('-Num','--normal_mutations', nargs=2, type=int, default=[2,0],help='Mutations found in samples = or above  the first item and = or below the seconds item will be kept')
-    main_parser.add_argument('-Tum','--treatment_mutations', nargs=2, type=int, default=[0,2],help='Mutations found in samples = or below the first item and = or above the seconds item will be kept')
+    main_parser.add_argument('-Tum','--treatment_mutations', nargs=2, type=int, default=[2,0],help='Mutations found in samples = or below the first item and = or above the seconds item will be kept')
     
     
     # Parse arguments
@@ -44,6 +50,8 @@ if __name__ == "__main__":
             cred = load(credentials)
             usr_glob = cred["username"]
             psw_glob = cred["password"]
+            print(f"Logged in as {usr_glob}")
+            print("")
 
     #Checks if credentials have been previously saved. 
     else:
@@ -86,10 +94,17 @@ if __name__ == "__main__":
 
     for key, value in MUT_vcf_filtered.items():
         oc.cravat_report(vcf_filtered_file_path=value, 
-                        annotated_file_name_path=f"./results/annotated_{key}_{output_file}_VCF.vcf", 
+                        annotated_file_vcf=f"./results/annotated_{key}_{output_file}_VCF.vcf",
+                        annotated_file_csv=f"./results/annotated_{key}_{output_file}.csv",  
                         username_oc=usr_glob, password_oc=psw_glob)
     
-    
+        ## 4) Generated plots and summary matrices
+        print("------------------------------------------------")
+        print("Plotting results...")
+        mplt.plot_mut_total_counts(tot_csv_df=f"./results/annotated_{key}_{output_file}.csv", name=output_file)
+        mplt.plot_mut_ontology(tot_csv_df=f"./results/annotated_{key}_{output_file}.csv", name=output_file)
+
+
 
     #Files are read in each function.      
     temp_dir="./temps"
