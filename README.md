@@ -9,15 +9,8 @@ VCF Annotator is a command-line tool designed to filter and annotate VCF files f
 - Annotates VCF files using OpenCravat (requires an account at OpenCravat | https://opencravat.org/ |. This is a free OpenSource website).
 - Supports saving and loading OpenCravat credentials for convenience.
 
-## Prerequisites
-
-- Python 3.10.12
-- pyfiglet_module = 1.0.2
-- json = 2.0.9
-- argparse = 1.1
-- pyvcf = 1.0.3
-- pandas = 1.3.5
-- requests = 2.25.1
+## Pre-requisites
+Python 3.10. For dependencies see requirements.txt
 
 ## Installation
 
