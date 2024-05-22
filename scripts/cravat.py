@@ -222,7 +222,7 @@ def initial_maftools(variant_annotation_list, out_path= "./maftools.R"):
         print('clin_data <- <file path to generated metadata file>',file=file_r)
         print('maf_file <- file path to generated maf file>',file=file_r)
         print(f'vc_nonSyn_vector <- c({variant_annotation_str})',file=file_r)
-        print("",file=file_r)
+        print("---------------------------------------------------------------",file=file_r)
         print("# This reads the file in MAF-tools.",file=file_r)
         print('laml <- read.maf(maf = maf_file,vc_nonSyn = vc_nonSyn_vector, clinicalData = clin_data)',file=file_r)
         print('plotmafSummary(maf = laml, rmOutlier = TRUE,  dashboard = TRUE, titvRaw = FALSE)',file=file_r)
