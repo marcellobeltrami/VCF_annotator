@@ -194,19 +194,16 @@ def convert_INDEL_csv_to_maf(input_file, output_file):
     return set(annotations_list)
 
 # Generate metadata for maftools. 
-def maf_tools_metadata(VCF_annotator_metadata_csv, output_name= "MAF_tools_metadata.csv"):
+def maf_tools_metadata(VCF_annotator_metadata_csv, output_path= "MAF_tools_metadata.csv"):
     datadf = pd.read_csv(VCF_annotator_metadata_csv, sep="\t")
     melted_df = datadf.melt(var_name= "Clinical_Info", value_name="Tumor_Sample_Barcode")
     melted_df = melted_df.dropna()
     # Rename and reorder the columns
     clinical_df = melted_df[['Tumor_Sample_Barcode', 'Clinical_Info']]
     clinical_df = clinical_df.reset_index(drop=True)
-    clinical_df.to_csv(output_name, index=False)
+    clinical_df.to_csv(output_path, index=False)
     
-
     
-
-
 #Function generating a starting R script for maftools annotation. 
 def initial_maftools(variant_annotation_list, out_path= "./maftools.R"):
     variant_annotation_str = ', '.join([f'"{item}"' for item in variant_annotation_list])
@@ -227,15 +224,6 @@ def initial_maftools(variant_annotation_list, out_path= "./maftools.R"):
         print('laml <- read.maf(maf = maf_file,vc_nonSyn = vc_nonSyn_vector, clinicalData = clin_data)',file=file_r)
         print('plotmafSummary(maf = laml, rmOutlier = TRUE,  dashboard = TRUE, titvRaw = FALSE)',file=file_r)
 
-
-
-# Usage example:
-input_file = "/home/marcello/Thesis_dev/VCF_annotator/results/annotated_SENS_test_run_INDEL.csv"
-output_file = "./annotated_SENS_test.maf"
-unique_annotation = convert_INDEL_csv_to_maf(input_file, output_file)
-
-initial_maftools(unique_annotation)
-maf_tools_metadata("/home/marcello/Thesis_dev/VCF_annotator/test_data/samples_metadata.txt")
 
 
 

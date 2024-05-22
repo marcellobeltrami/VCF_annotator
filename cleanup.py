@@ -8,12 +8,23 @@ json_file_cred = "./scripts/settings/credentials.json"
 if confirm=="y" or confirm=="Y":
     print("Removing files....")
     
+    results_to_rm = listdir("./results/MAFTools/")    
+    for res in results_to_rm:
+        remove(path.join("./results/MAFTools",res))
+        print(" -->",f"./results/MAFTools/{res}" , "removed.")
+        
+
+
     #removes results in result directory
     results_to_rm = listdir("./results/")    
     for res in results_to_rm:
-        remove(path.join("./results/",res))
-        print(" -->",f"./results/{res}" , "removed.")
-        
+        if path.isdir(path.join("./results/",res)) == True: 
+            pass
+        else:
+            remove(path.join("./results/",res))
+            print(" -->",f"./results/{res}" , "removed.")
+    
+   
 
     #Removes JSON credentials.
     if path.exists(json_file_cred) == True:

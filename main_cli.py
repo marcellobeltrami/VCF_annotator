@@ -1,7 +1,7 @@
 import scripts.cravat as oc
 import scripts.filter as fl 
 import scripts.plotting as mplt
-from os import listdir, remove, path, remove
+from os import listdir, remove, path, remove, makedirs
 from json import dump, load
 from argparse import ArgumentParser
 
@@ -91,12 +91,18 @@ if __name__ == "__main__":
     ## 3)Add cravat annotation
     print("------------------------------------------------")
     print("Annotating vcf...")
-
+    
+    makedirs("./results/MAFTools/", exist_ok=True)
+    
     for key, value in MUT_vcf_filtered.items():
         oc.cravat_report(vcf_filtered_file_path=value, 
                         annotated_file_vcf=f"./results/annotated_{key}_{output_file}_VCF.vcf",
                         annotated_file_csv=f"./results/annotated_{key}_{output_file}.csv",  
                         username_oc=usr_glob, password_oc=psw_glob)
+        annotaion_list = oc.convert_INDEL_csv_to_maf(input_file=f"./results/annotated_{key}_{output_file}.csv", 
+                                    output_file=f"./results/MAFTools/annotated_{key}_{output_file}.maf")
+        oc.maf_tools_metadata(VCF_annotator_metadata_csv=samples_tab, output_path= f"./results/MAFTools/{key}_MAF_tools_metadata.csv")
+        oc.initial_maftools(variant_annotation_list=annotaion_list, out_path= f"./results/MAFTools/{key}_maftools.R")
     
         ## 4) Generated plots and summary matrices
         print("------------------------------------------------")

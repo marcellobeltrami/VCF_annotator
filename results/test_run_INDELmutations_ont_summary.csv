@@ -1,7 +1,0 @@
-Sample_Name,2kb_downstream_variant,2kb_upstream_variant,3_prime_UTR_variant,5_prime_UTR_variant,NMD_transcript_variant,frameshift_elongation,frameshift_truncation,inframe_deletion,inframe_insertion,intron_variant,lnc_RNA,miRNA,processed_transcript
-R_BT594,4,1,73,3,1,1,0,2,2,31,5,0,0
-R_MBT357,0,2,64,11,0,0,0,0,1,21,0,1,0
-R_MBT373,0,1,59,7,0,0,0,1,0,28,2,0,0
-S_BT241,10,12,316,35,2,9,1,8,6,227,30,1,1
-S_BT935,11,11,312,34,2,9,2,9,6,210,23,1,0
-S_MBT168,2,6,161,18,0,0,1,7,3,96,9,0,1
