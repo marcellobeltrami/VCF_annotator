@@ -209,13 +209,19 @@ def maf_tools_metadata(VCF_annotator_metadata_csv, output_name= "MAF_tools_metad
 
 #Function generating a starting R script for maftools annotation. 
 def initial_maftools(variant_annotation_list, out_path= "./maftools.R"):
-     with open(out_path, "w" ) as file_r: 
-        print('BiocManager::install("maftools")', file=file_r)
+    variant_annotation_str = ', '.join([f'"{item}"' for item in variant_annotation_list])
+
+    with open(out_path, "w" ) as file_r: 
+        print('if (!require("BiocManager", quietly = TRUE))',file=file_r)
+        print('     install.packages("BiocManager")',file=file_r)
+        print('if (!require("maftools", quietly = TRUE))',file=file_r)
+        print('     install.packages("maftools")',file=file_r)
         print('library(maftools)',file=file_r)
+        print("",file=file_r)
         print("# Here pathways to the generated file metadata are required.",file=file_r)
         print('clin_data <- <file path to generated metadata file>',file=file_r)
         print('maf_file <- file path to generated maf file>',file=file_r)
-        print(f'vc_nonSyn_vector <- c({variant_annotation_list})',file=file_r)
+        print(f'vc_nonSyn_vector <- c({variant_annotation_str})',file=file_r)
         print("",file=file_r)
         print("# This reads the file in MAF-tools.",file=file_r)
         print('laml <- read.maf(maf = maf_file,vc_nonSyn = vc_nonSyn_vector, clinicalData = clin_data)',file=file_r)

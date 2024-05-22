@@ -1,8 +1,9 @@
 # 🧬 VCF Annotator 🧬
 
-A light-weighted and portable VCF Annotator is a command-line tool designed to filter and annotate VCF files for human genomes. It filters chromosomes and mutations and then annotates the VCF file using OpenCravat. 
+A light-weight and portable command-line VCF Annotator tool designed to filter and annotate VCF files for human genomes. It filters chromosomes and mutations and then annotates the VCF file using OpenCravat. 
 Its greatest benefit is not needing to download and setup a local database as it is seen in other annotators. 
-Additionally, this software allows fo seamless integration with MAFTools, as it generates a MAF file and  
+Additionally, this software allows fo seamless integration with MAFTools, as it generates a MAF file, and required MAF sample annotation (called Clinical_Data in MAF tools). 
+A starting R script for MAFTools is also generated at runtime, which can then be modified as most appropriate by for own analysis.    
 
 ## Features
 
