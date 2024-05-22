@@ -1,6 +1,8 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 def plot_mut_total_counts(tot_csv_df, name="total_mutations"):
     """
     Plots a bar chart of mutations counts per sample. This includes coding and non coding

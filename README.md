@@ -1,6 +1,8 @@
 # 🧬 VCF Annotator 🧬
 
-VCF Annotator is a command-line tool designed to filter and annotate VCF files for human genomes. It filters chromosomes and mutations and then annotates the VCF file using OpenCravat.
+A light-weighted and portable VCF Annotator is a command-line tool designed to filter and annotate VCF files for human genomes. It filters chromosomes and mutations and then annotates the VCF file using OpenCravat. 
+Its greatest benefit is not needing to download and setup a local database as it is seen in other annotators. 
+Additionally, this software allows fo seamless integration with MAFTools, as it generates a MAF file and  
 
 ## Features
 
