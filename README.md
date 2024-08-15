@@ -5,7 +5,7 @@ Its greatest benefit is not needing to download and setup a local database as it
 Additionally, this software allows fo seamless integration with MAFTools, as it generates a MAF file, and required MAF sample annotation (called Clinical_Data in MAF tools). 
 A starting R script for MAFTools is also generated at runtime, which can then be modified as most appropriate by for own analysis.    
 
-Python version: 3.11.4
+![Alt text](./flowchart.png)
 
 ## Features
 
