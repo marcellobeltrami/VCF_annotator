@@ -15,7 +15,7 @@ Python version: 3.11.4
 - Supports saving and loading OpenCravat credentials for convenience.
 
 ## Pre-requisites
-Python 3.10. For dependencies see requirements.txt
+Python version: 3.11.4. For dependencies see requirements.txt
 
 ## Installation
 
